@@ -7,7 +7,7 @@ import com.ferreusveritas.skylightlanterns.init.BlockInit;
 import com.ferreusveritas.skylightlanterns.init.ItemInit;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -33,7 +33,7 @@ public class SkylightLanterns {
 	
 	@SubscribeEvent
 	public static void onCommonSetup(FMLClientSetupEvent event) {
-		RenderTypeLookup.setRenderLayer(BlockInit.SKYLIGHT_LANTERN.get(), RenderType.cutout());
+		ItemBlockRenderTypes.setRenderLayer(BlockInit.SKYLIGHT_LANTERN.get(), RenderType.cutout());
 	}
 	
 }

@@ -8,24 +8,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.ferreusveritas.skylightlanterns.block.SkylightSource;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.chunk.IChunkLightProvider;
-import net.minecraft.world.lighting.SkyLightEngine;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.chunk.LightChunkGetter;
+import net.minecraft.world.level.lighting.SkyLightEngine;
 
 @Mixin(SkyLightEngine.class)
 public abstract class SkyLightEngineMixin {
 	
 	private final long[] lastChunkPos = new long[2];
-	private final IBlockReader[] lastChunk = new IBlockReader[2];
-	protected IChunkLightProvider chunkSource = null;
-	protected final BlockPos.Mutable pos = new BlockPos.Mutable();
+	private final BlockGetter[] lastChunk = new BlockGetter[2];
+	protected LightChunkGetter chunkSource = null;
+	protected final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 	
 	@Inject(method = "<init>", at = @At("TAIL"))
-	public void init(IChunkLightProvider lightProvider, CallbackInfo ci) {
+	public void init(LightChunkGetter lightProvider, CallbackInfo ci) {
 		this.chunkSource = lightProvider;
 	}
 	
@@ -33,7 +33,7 @@ public abstract class SkyLightEngineMixin {
 	public void getBrightness(long pStartPos, long pEndPos, int pStartLevel, CallbackInfoReturnable<Integer> cir) {
 		if(pStartPos != Long.MAX_VALUE && pEndPos != Long.MAX_VALUE && pStartLevel != 0) {
 			pos.set(pEndPos);
-			IBlockReader iblockreader = getChunk(pos.getX() >> 4, pos.getZ() >> 4);
+			BlockGetter iblockreader = getChunk(pos.getX() >> 4, pos.getZ() >> 4);
 			if(iblockreader != null) {
 				BlockState blockState = iblockreader.getBlockState(pos);
 				Block block = blockState.getBlock();
@@ -44,7 +44,7 @@ public abstract class SkyLightEngineMixin {
 		}
 	}
 	
-	private IBlockReader getChunk(int pChunkX, int pChunkZ) {
+	private BlockGetter getChunk(int pChunkX, int pChunkZ) {
 		long i = ChunkPos.asLong(pChunkX, pChunkZ);
 		
 		for(int j = 0; j < 2; ++j) {
@@ -53,7 +53,7 @@ public abstract class SkyLightEngineMixin {
 			}
 		}
 		
-		IBlockReader iblockreader = this.chunkSource.getChunkForLighting(pChunkX, pChunkZ);
+		BlockGetter iblockreader = this.chunkSource.getChunkForLighting(pChunkX, pChunkZ);
 		
 		for(int k = 1; k > 0; --k) {
 			lastChunkPos[k] = lastChunkPos[k - 1];

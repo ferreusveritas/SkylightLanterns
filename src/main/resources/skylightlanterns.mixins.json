@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.ferreusveritas.skylightlanterns.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"refmap": "${mod_id}.refmap.json",
+	"mixins": [
+		"SkyLightEngineMixin"
+	],
+	"client": [],
+	"minVersion": "0.8"
+}

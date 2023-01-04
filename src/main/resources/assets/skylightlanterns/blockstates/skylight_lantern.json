@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"hanging=false": {
+			"model": "skylightlanterns:block/lantern"
+		},
+		"hanging=true": {
+			"model": "skylightlanterns:block/lantern_hanging"
+		}
+	}
+}
